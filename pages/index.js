@@ -1,9 +1,20 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import Link from "next/link";
+import React, { useState, useEffect } from "react";
 
 export default function Home() {
-  const href = "api/tasks";
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const req = await fetch("http://localhost:3000/api/tasks");
+      const { data } = await req.json();
+      setTasks(data);
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -13,8 +24,16 @@ export default function Home() {
       </Head>
 
       <main>
-        <h1>Hello World!</h1>
-        <Link href={href}>our api</Link>
+        <h1>Todo List</h1>
+        <ul>
+          {tasks.map((task, i) => {
+            return (
+              <li key={i}>
+                <span>task: {task.name}</span> <button>delete</button>
+              </li>
+            );
+          })}
+        </ul>
       </main>
     </div>
   );
