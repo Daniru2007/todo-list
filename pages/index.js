@@ -34,6 +34,18 @@ export default function Home() {
     setTaskName("");
   };
 
+  const updateTask = async (ind, name) => {
+    await fetch(`http://localhost:3000/api/tasks/${ind}`, {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: name }),
+    });
+    fetchData();
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -48,7 +60,11 @@ export default function Home() {
           {tasks.map((task, i) => {
             return (
               <li key={i}>
-                <span>{task.name} </span>
+                <input
+                  defaultValue={task.name}
+                  onChange={(e) => updateTask(i, e.target.value)}
+                ></input>
+
                 <button onClick={() => deleteTask(i)}>delete</button>
               </li>
             );
