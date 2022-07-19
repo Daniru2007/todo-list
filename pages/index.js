@@ -17,11 +17,6 @@ export default function Home() {
     fetchData();
   }, []);
 
-  const deleteTask = async (ind) => {
-    await fetch(`http://localhost:3000/api/tasks/${ind}`, { method: "DELETE" });
-    fetchData();
-  };
-
   const addTask = async () => {
     await fetch("http://localhost:3000/api/tasks/create", {
       method: "POST",
@@ -49,8 +44,9 @@ export default function Home() {
           {tasks.map((task, i) => {
             return (
               <li key={i}>
-                <span>{task.name} </span>
-                <button onClick={() => deleteTask(i)}>X</button>
+                <Link href={`http://localhost:3000/task/${i}`}>
+                  {task.name}
+                </Link>
               </li>
             );
           })}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter, router as route } from "next/router";
 
 export default function task() {
   const [name, setName] = useState("");
@@ -19,6 +19,11 @@ export default function task() {
   const query = router.query;
   const id = query.id;
 
+  const deleteTask = async (ind) => {
+    await fetch(`http://localhost:3000/api/tasks/${ind}`, { method: "DELETE" });
+    route.push("/");
+  };
+
   const updateTask = async (ind, name) => {
     await fetch(`http://localhost:3000/api/tasks/${ind}`, {
       method: "PUT",
@@ -28,6 +33,7 @@ export default function task() {
       },
       body: JSON.stringify({ name: name }),
     });
+    route.push("/");
   };
 
   return (
@@ -37,9 +43,11 @@ export default function task() {
         onChange={(e) => setName(e.target.value)}
         placeholder="update your task..."
       ></input>
+      <button onClick={() => deleteTask(query.id)}>Delete</button>
       <br />
 
       <button onClick={() => updateTask(query.id, name)}>Save</button>
+      <button onClick={() => route.push("/")}>Back</button>
     </div>
   );
 }
