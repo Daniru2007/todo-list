@@ -5,15 +5,20 @@ import React, { useState, useEffect } from "react";
 export default function Home() {
   const [tasks, setTasks] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const req = await fetch("http://localhost:3000/api/tasks");
-      const { data } = await req.json();
-      setTasks(data);
-    };
+  const fetchData = async () => {
+    const req = await fetch("http://localhost:3000/api/tasks");
+    const { data } = await req.json();
+    setTasks(data);
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
+
+  const deleteTask = async (ind) => {
+    await fetch(`http://localhost:3000/api/tasks/${ind}`, { method: "DELETE" });
+    fetchData();
+  };
 
   return (
     <div className={styles.container}>
@@ -29,7 +34,8 @@ export default function Home() {
           {tasks.map((task, i) => {
             return (
               <li key={i}>
-                <span>task: {task.name}</span> <button>delete</button>
+                <span>task: {task.name} </span>
+                <button onClick={() => deleteTask(i)}>delete</button>
               </li>
             );
           })}
